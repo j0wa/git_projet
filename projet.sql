@@ -101,39 +101,41 @@ WHERE ag.age_num = re.rec_agent
 AND su.sup_num = re.rec_super_hero
 ORDER BY re.rec_date;
 
+
 CREATE VIEW projet.agent_record_number AS
-SELECT ag.age_num AS "Agent Number", count(re.rec_num)
+SELECT ag.age_num AS "Agent Number", count(re.rec_num),re.rec_date
 FROM projet.agents ag, projet.records re
 WHERE ag.age_num = re.rec_agent
-GROUP BY re.rec_date;
+GROUP BY re.rec_date, ag.age_num;
+
 
 CREATE VIEW projet.super_heroes_ranking AS
 SELECT su.sup_num AS "Super Number",su.sup_name,su.sup_fname,su.sup_lname,count(*)
 FROM projet.super_heroes su, projet.records re
-AND su.sup_num = re.rec_super_hero
-AND re.rec_status = "win"
+WHERE su.sup_num = re.rec_super_hero
+AND re.rec_status = 'win'
 GROUP BY su.sup_num;
 
 /****************************************************************************/
 /*********************************TRIGGER************************************/
 /****************************************************************************/
 
-CREATE OR REPLACE FUNCTION projet.triggerAddToAgent ()
+
+CREATE OR REPLACE FUNCTION projet.procedureAddToAgent()
 RETURNS TRIGGER AS $$
 DECLARE
    old_count INTEGER;
 BEGIN
-	SELECT ag.age_record_count FROM projet.agents ag
-	WHERE c.numero=NEW.compte_source INTO ancien_solde;
-	UPDATE preprojet.comptes
-	SET solde=ancien_solde-NEW.montant WHERE numero=NEW.compte_source;
-	SELECT c.solde FROM preprojet.comptes c
-	WHERE c.numero=NEW.compte_destination INTO ancien_solde;
-	UPDATE preprojet.comptes
-	SET solde=ancien_solde+NEW.montant WHERE numero=NEW.compte_destination;
-	   RETURN NEW;
+	UPDATE projet.agents SET projet.agents.age_record_count = projet.agents.age_record_count+1
+	WHERE projet.agents.age_num = NEW.rec_agent
+
+	   RETURN NULL;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER triggerAddToAgent AFTER INSERT ON projet.records
+FOR EACH ROW EXECUTE PROCEDURE projet.procedureAddToAgent();
 
 /****************************************************************************/
 /*********************************INSERT*************************************/
