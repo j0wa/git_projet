@@ -134,19 +134,6 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER triggerAddToAgent AFTER INSERT ON projet.records
 FOR EACH ROW EXECUTE PROCEDURE projet.procedureAddToAgent();
 
-CREATE OR REPLACE FUNCTION projet.procedureAddToAgent()
-RETURNS TRIGGER AS $$
-BEGIN
-	UPDATE projet.agents SET projet.agents.age_record_count = projet.agents.age_record_count+1
-	WHERE projet.agents.age_num = NEW.rec_agent;
-	RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
-
-CREATE TRIGGER triggerAddToAgent AFTER INSERT ON projet.records
-FOR EACH ROW EXECUTE PROCEDURE projet.procedureAddToAgent();
-
 /****************************************************************************/
 /*********************************INSERT*************************************/
 /****************************************************************************/

@@ -14,12 +14,12 @@ public class DataBaseAccess {
 			System.out.println("Driver PostgreSQL manquant !");
 			System.exit(1);
 		}
-		System.out.println("Driver chargé");
+		System.out.println("Driver chargï¿½");
 		
 		/*
-		 * 	Connexion au serveur de la base de donnée
+		 * 	Connexion au serveur de la base de donnï¿½e
 		 */
-		String url="jdbc:postgresql://localhost:5432/Projet Marvelle Vs Décé?user=postgres&password=azerty";	
+		String url="jdbc:postgresql://localhost:5432/Projet?user=postgres&password=azerty";	
 		try {
 			conn=DriverManager.getConnection(url);
 		} 
@@ -27,7 +27,7 @@ public class DataBaseAccess {
 			System.out.println("Impossible de joindre le server !");
 			System.exit(1);
 		}
-		System.out.println("Connexion avec la Base de donnée établie");	
+		System.out.println("Connexion avec la Base de donnï¿½e ï¿½tablie");	
 	}
 
 	public Connection getConn() {
